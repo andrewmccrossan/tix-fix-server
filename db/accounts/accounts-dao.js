@@ -12,10 +12,10 @@ const createAccount = (account) =>
 const deleteAccount = (id) =>
     model.deleteOne({_id: id});
 
-const updateAccount = (id, updatedAccount) => {
+const updateAccount = (id, updatedAccount) =>
     model.updateOne({_id: id},
                     {$set: updatedAccount});
-}
+
 
 module.exports = {
     findAllAccounts, findAccountById, createAccount, deleteAccount, updateAccount

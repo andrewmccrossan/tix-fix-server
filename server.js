@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+const mongodb_uri = process.env.MONGODB_URI;
+await mongoose.connect(mongodb_uri);
 
 app.get('/hello', (req, res) => {
     res.send('Hello World!');

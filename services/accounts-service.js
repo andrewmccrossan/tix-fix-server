@@ -3,23 +3,23 @@ const dao = require('../db/accounts/accounts-dao')
 module.exports = (app) => {
 
     const findAllAccounts = (req, res) =>
-        dao.findAllMovies()
-            .then(movies => res.json(movies));
+        dao.findAllAccounts()
+            .then(accounts => res.json(accounts));
 
     const deleteAccount = (req, res) =>
-        dao.deleteMovie(req.params.id)
+        dao.deleteAccount(req.params.id)
             .then((status) => res.send(status));
 
     const createAccount = (req, res) =>
-        dao.createMovie(req.body)
-            .then((insertedMovie) => res.json(insertedMovie));
+        dao.createAccount(req.body)
+            .then((insertedAccount) => res.json(insertedAccount));
 
     const findAccountById = (req, res) =>
-        dao.findMovieById(req.params.id)
-            .then(movie => res.json(movie));
+        dao.findAccountById(req.params.id)
+            .then(account => res.json(account));
 
     const updateAccount = (req, res) =>
-        dao.updateMovie(req.params.id, req.body)
+        dao.updateAccount(req.params.id, req.body)
             .then(status => res.send(status));
 
     app.get("/rest/accounts", findAllAccounts);
