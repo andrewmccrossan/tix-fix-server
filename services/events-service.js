@@ -6,13 +6,13 @@ const SEATGEEK_CLIENT_SECRET = process.env.SEATGEEK_CLIENT_SECRET || '3218bfa9ff
 module.exports = (app) => {
 
     const getSportsEvents = (req, res) => {
-        axios.get(`https://api.seatgeek.com/2/events?taxonomies.name=sports&client_id=${SEATGEEK_CLIENT_ID}&client_secret=${SEATGEEK_CLIENT_SECRET}`)
-            .then(response => res.json(response.data))
+        axios.get(`https://api.seatgeek.com/2/events?taxonomies.name=sports&sort=score.desc&client_id=${SEATGEEK_CLIENT_ID}&client_secret=${SEATGEEK_CLIENT_SECRET}`)
+            .then(response => res.json(response.data.events))
     }
     app.get('/events/sports', getSportsEvents);
 
     const getConcertEvents = (req, res) => {
-        axios.get(`https://api.seatgeek.com/2/events?taxonomies.name=concert&client_id=${SEATGEEK_CLIENT_ID}&client_secret=${SEATGEEK_CLIENT_SECRET}`)
+        axios.get(`https://api.seatgeek.com/2/events?taxonomies.name=concert&sort=score.desc&client_id=${SEATGEEK_CLIENT_ID}&client_secret=${SEATGEEK_CLIENT_SECRET}`)
             .then(response => res.json(response.data.events))
     }
     app.get('/events/concert', getConcertEvents);
