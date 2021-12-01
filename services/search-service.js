@@ -6,9 +6,10 @@ const SEATGEEK_CLIENT_SECRET = process.env.SEATGEEK_CLIENT_SECRET || '3218bfa9ff
 module.exports = (app) => {
 
     const getSearchResults = (req, res) => {
-        const query = req.params.query;
-        axios.get(`https://api.seatgeek.com/2/events?q=${query}&client_id=${SEATGEEK_CLIENT_ID}&client_secret=${SEATGEEK_CLIENT_SECRET}`)
-            .then(response => res.json(response.data))
+        const query = req.params['query'];
+        console.log(query);
+        axios.get(`https://api.seatgeek.com/2/events?q=${query}&per_page=100&client_id=${SEATGEEK_CLIENT_ID}&client_secret=${SEATGEEK_CLIENT_SECRET}`)
+            .then(response => res.json(response.data.events))
     }
-    app.get('/search/:query', getSearchResults);
+    app.get('/search/results/:query', getSearchResults);
 }
