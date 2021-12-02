@@ -7,7 +7,6 @@ module.exports = (app) => {
 
     const getSearchResults = (req, res) => {
         const query = req.params['query'];
-        console.log(query);
         axios.get(`https://api.seatgeek.com/2/events?q=${query}&per_page=100&client_id=${SEATGEEK_CLIENT_ID}&client_secret=${SEATGEEK_CLIENT_SECRET}`)
             .then(response => res.json(response.data.events))
     }
