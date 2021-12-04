@@ -16,4 +16,11 @@ module.exports = (app) => {
             .then(response => res.json(response.data.events))
     }
     app.get('/events/concert', getConcertEvents);
+
+    const getEventDetails = (req, res) => {
+        const id = req.params['eventId'];
+        axios.get(`https://api.seatgeek.com/2/events/${id}?client_id=${SEATGEEK_CLIENT_ID}&client_secret=${SEATGEEK_CLIENT_SECRET}`)
+            .then(response => res.json(response.data))
+    }
+    app.get('/events/details/:eventId', getEventDetails);
 }
