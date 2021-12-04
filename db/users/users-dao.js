@@ -19,6 +19,10 @@ const updateUser = (id, updatedUser) =>
     model.updateOne({_id: id},
                     {$set: updatedUser});
 
+const findUserByUsername = (username) =>
+    model.find({username: username});
+
 module.exports = {
-    findAllUsers, findUserById, createUser, deleteUser, updateUser, findUserByCredentials
+    findAllUsers, findUserById, createUser, deleteUser, updateUser, findUserByCredentials,
+    findUserByUsername
 };

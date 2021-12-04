@@ -41,15 +41,25 @@ module.exports = (app) => {
 
     const register = (req, res) => {
         const newUser = req.body;
-        usersDao.createUser(newUser)
-            .then(actualUser => {
-                req.session['profile'] = actualUser;
-                res.json(actualUser);
-            })
+        usersDao.findUserByUsername(newUser.username)
+            .then(user => {
+                if (user.size > 0) {
+                    res.sendStatus(400);
+                } else {
+                    usersDao.createUser(newUser)
+                        .then(actualUser => {
+                            console.log(actualUser);
+                            req.session['profile'] = actualUser;
+                            res.json(actualUser);
+                        })
+                }})
     };
 
-    const profile = (req, res) =>
+    const profile = (req, res) => {
+        console.log(req.session['profile']);
+        console.log(req.session);
         res.json(req.session['profile']);
+    };
 
     const logout = (req, res) => {
         req.session.destroy();
