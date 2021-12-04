@@ -32,7 +32,7 @@ module.exports = (app) => {
         usersDao.findUserByCredentials(username, password)
             .then(user => {
                 if(user) {
-                    req.session['profile'] = user;
+                    req.session['profile'] = user[0];
                     res.json(user);
                 } else {
                     res.sendStatus(403);
@@ -48,7 +48,6 @@ module.exports = (app) => {
                 } else {
                     usersDao.createUser(newUser)
                         .then(actualUser => {
-                            console.log(actualUser);
                             req.session['profile'] = actualUser;
                             res.json(actualUser);
                         })
@@ -56,8 +55,6 @@ module.exports = (app) => {
     };
 
     const profile = (req, res) => {
-        console.log(req.session['profile']);
-        console.log(req.session);
         res.json(req.session['profile']);
     };
 

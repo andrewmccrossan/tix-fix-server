@@ -34,7 +34,6 @@ app.get('/hello', (req, res) => {
     res.send('Hello World!');
 });
 
-require('./services/accounts-service')(app);
 require('./services/search-service')(app);
 require('./services/events-service')(app);
 require('./services/session-service')(app);
