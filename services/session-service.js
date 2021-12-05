@@ -55,6 +55,7 @@ module.exports = (app) => {
     };
 
     const profile = (req, res) => {
+        console.log(req.session['profile']);
         res.json(req.session['profile']);
     };
 
