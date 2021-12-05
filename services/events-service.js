@@ -29,7 +29,7 @@ module.exports = (app) => {
 
         //referenced: https://stackoverflow.com/questions/28821804/how-can-i-quickly-determine-the-state-for-a-given-zipcode
         axios.get(`http://api.zippopotam.us/us/${zipCode}`)
-            .then(response => axios.get(`https://api.seatgeek.com/2/events?venue.city=${response.data.places[0]["place name"]}&venue.state=${response.data.places[0]["state abbreviation"]}&sort=score.desc&client_id=${SEATGEEK_CLIENT_ID}&client_secret=${SEATGEEK_CLIENT_SECRET}`))
+            .then(response => axios.get(`https://api.seatgeek.com/2/events?venue.state=${response.data.places[0]["state abbreviation"]}&sort=score.desc&client_id=${SEATGEEK_CLIENT_ID}&client_secret=${SEATGEEK_CLIENT_SECRET}`))
             .then(response => res.json(response.data.events))
     }
     app.get('/events/zipcode/:zipcode', getZipCodeEvents);
