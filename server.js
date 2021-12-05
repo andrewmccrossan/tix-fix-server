@@ -22,16 +22,22 @@ mongoose.connection.once("open", function() {
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.set('trust proxy', 1) // trust first proxy
-const session = require('express-session');
-app.use(session({
+const sess = {
     resave: false,
     saveUninitialized: true,
-    secret: 'any string',
-    cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
-                }
-                )
-);
+    secret: 'keyboard cats',
+    cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 48,
+    }
+}
+if (process.env.NODE_ENVIRONMENT) {
+    app.set('trust proxy', 1); // trust first proxy
+    sess.cookie.secure = true;
+    sess.cookie.sameSite = 'none';
+}
+const session = require('express-session');
+app.use(session(sess));
 
 app.get('/hello', (req, res) => {
     res.send('Hello World!');
