@@ -13,8 +13,8 @@ app.use(function(req, res, next) {
 });
 
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tix-fix', { useUnifiedTopology: true, useNewUrlParser: true });
-//mongoose.connect('mongodb+srv://andrewmcc:bsEqmw74dahTS7d@tix-fix-east.p5uyl.mongodb.net/tixFixDB?retryWrites=true&w=majority', { useUnifiedTopology: true, useNewUrlParser: true });
+//mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tix-fix', { useUnifiedTopology: true, useNewUrlParser: true });
+mongoose.connect('mongodb+srv://andrewmcc:bsEqmw74dahTS7d@tix-fix-east.p5uyl.mongodb.net/tixFixDB?retryWrites=true&w=majority', { useUnifiedTopology: true, useNewUrlParser: true });
 mongoose.connection.once("open", function() {
     console.log("MongoDB database connection established successfully");
 });
