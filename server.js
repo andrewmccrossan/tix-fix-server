@@ -22,6 +22,7 @@ mongoose.connection.once("open", function() {
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.set('trust proxy', 1) // trust first proxy
 const session = require('express-session');
 app.use(session({
     resave: false,
