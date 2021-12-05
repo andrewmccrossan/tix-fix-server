@@ -28,7 +28,7 @@ app.use(session({
     saveUninitialized: true,
     secret: 'any string',
     cookie: {
-        sameSite: false,
+        sameSite: 'none',
     }
                 }
                 )
