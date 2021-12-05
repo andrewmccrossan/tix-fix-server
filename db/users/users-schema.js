@@ -6,7 +6,7 @@ const schema = mongoose.Schema({
                                    lastName: String,
                                    email: String,
                                    zip: String,
-                                   initialArtistInterest: String,
+                                   artistInterest: String,
                                    role: {type: String, enum: ['SELLER', 'BUYER', 'REVIEWER']}
                                }, {collection: "users"});
 module.exports = schema;
