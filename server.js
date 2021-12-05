@@ -29,6 +29,8 @@ app.use(session({
     secret: 'any string',
     cookie: {
         sameSite: 'none',
+        secure: true
+
     }
                 }
                 )
