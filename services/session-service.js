@@ -17,7 +17,7 @@ module.exports = (app) => {
     }
     const resetSession = (req, res) => {
         req.session.destroy();
-        res.send(200);
+        res.sendStatus(200);
     }
 
     app.get('/api/session/set/:name/:value', setSession);
@@ -61,7 +61,7 @@ module.exports = (app) => {
 
     const logout = (req, res) => {
         req.session.destroy();
-        res.send(200);
+        res.sendStatus(200);
     };
 
     app.post('/api/login', login);
