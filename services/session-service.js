@@ -31,7 +31,7 @@ module.exports = (app) => {
         const password = req.body.password;
         usersDao.findUserByCredentials(username, password)
             .then(user => {
-                if(user) {
+                if(user.length > 0) {
                     req.session['profile'] = user[0];
                     res.json(user);
                 } else {
@@ -43,7 +43,7 @@ module.exports = (app) => {
         const newUser = req.body;
         usersDao.findUserByUsername(newUser.username)
             .then(user => {
-                if (user.size > 0) {
+                if (user.length > 0) {
                     res.sendStatus(400);
                 } else {
                     usersDao.createUser(newUser)
