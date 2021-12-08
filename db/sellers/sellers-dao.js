@@ -27,7 +27,11 @@ const findSellersByEventID = (eventID) =>
 const findTicketInfoBySellerAndEventID = (sellerID, eventID) =>
     model.find({_id: sellerID}, {eventsSelling: {$elemMatch: {eventID: eventID}}});
 
+const findReviewsForSeller = (sellerID) =>
+    model.find({_id: sellerID}, {reviews: 1});
+
 module.exports = {
     findSellerById, createSeller, deleteSeller, updateSeller, findSellersByEventID,
-    findTicketInfoBySellerAndEventID, updateSellerEventsSelling, updateSellerEventsWatchlist
+    findTicketInfoBySellerAndEventID, updateSellerEventsSelling, updateSellerEventsWatchlist,
+    findReviewsForSeller
 };
