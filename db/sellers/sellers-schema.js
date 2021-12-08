@@ -7,5 +7,6 @@ const schema = mongoose.Schema({
                                        qty: Number,
                                    }],
                                    eventsWatchlist: [String],
+                                   reviews: [String],
                                }, {collection: "sellers"});
 module.exports = schema;
