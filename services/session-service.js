@@ -1,4 +1,7 @@
 const usersDao = require('../db/users/users-dao');
+const sellersDao = require('../db/sellers/sellers-dao');
+const buyersDao = require('../db/buyers/buyers-dao');
+const reviewersDao = require('../db/reviewers/reviewers-dao');
 
 module.exports = (app) => {
     const setSession = (req, res) => {
@@ -46,10 +49,41 @@ module.exports = (app) => {
                 if (user.length > 0) {
                     res.sendStatus(400);
                 } else {
+                    let registeredUser;
                     usersDao.createUser(newUser)
                         .then(actualUser => {
+                            registeredUser = actualUser;
                             req.session['profile'] = actualUser;
-                            res.json(actualUser);
+                        })
+                        .then(() => {
+                            switch (newUser.role) {
+                                case 'BUYER':
+                                    buyersDao.createBuyer({
+                                                              _id: registeredUser._id.toString(),
+                                                              eventsBought: [],
+                                                              eventsWishlist: [],
+                                                          })
+                                        .then(() => res.json(registeredUser));
+                                    break;
+                                case 'SELLER':
+                                    sellersDao.createSeller({
+                                                              _id: registeredUser._id.toString(),
+                                                              eventsSelling: [],
+                                                              eventsWatchlist: [],
+                                                          })
+                                        .then(() => res.json(registeredUser));
+                                    break;
+                                case 'REVIEWER':
+                                    reviewersDao.createReviewer({
+                                                                _id: registeredUser._id.toString(),
+                                                                reviews: [],
+                                                                eventsToDoList: [],
+                                                            })
+                                        .then(() => res.json(registeredUser));
+                                    break;
+                                default:
+                                    throw new Error('Invalid role was given.');
+                            }
                         })
                 }})
     };
