@@ -46,7 +46,8 @@ app.get('/hello', (req, res) => {
 require('./services/search-service')(app);
 require('./services/events-service')(app);
 require('./services/session-service')(app);
-require('./services/users-service')(app);
+require('./services/sell-service')(app);
+require('./services/buy-service')(app);
 require('./services/reviews-service')(app);
 
 app.listen(process.env.PORT || 4000);

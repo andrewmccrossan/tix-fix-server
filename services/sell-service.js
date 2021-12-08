@@ -1,8 +1,4 @@
-const usersDao = require('../db/users/users-dao');
 const sellersDao = require('../db/sellers/sellers-dao');
-const buyersDao = require('../db/buyers/buyers-dao');
-const reviewersDao = require('../db/reviewers/reviewers-dao');
-
 
 module.exports = (app) => {
 
