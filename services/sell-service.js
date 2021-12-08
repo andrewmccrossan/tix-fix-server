@@ -2,15 +2,12 @@ const sellersDao = require('../db/sellers/sellers-dao');
 
 module.exports = (app) => {
 
-    const getSellerByID = (req, res) => {
-        sellersDao.findSellerById(req.params.sellerID)
-            .then(seller => {
-                if(seller) {
-                    res.json(seller);
-                } else {
-                    res.sendStatus(400);
-                }})
+    const addToSellerEventsSelling = (req, res) => {
+        const newTickets = req.body;
+        const seller = req.session['profile']._id.toString();
+        sellersDao.updateSellerEventsSelling(seller, newTickets)
+            .then((status) => res.json(status))
     };
 
-    app.get('/api/sellers/:sellerID', getSellerByID);
+    app.post('/sell', addToSellerEventsSelling);
 }
