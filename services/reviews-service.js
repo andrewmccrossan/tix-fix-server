@@ -23,10 +23,11 @@ module.exports = (app) => {
                     text: text,
                     score: score,
                     date: date,
-                                        })
+                })
                     .then(review => {
                         if(review) {
-                            res.sendStatus(200);
+                            reviewersDao.updateReviewerReviews(req.session['profile']._id.toString(), review._id)
+                                .then(() => res.sendStatus(200))
                         } else {
                             res.sendStatus(400);
                         }})
