@@ -9,5 +9,13 @@ module.exports = (app) => {
             .then((status) => res.json(status))
     };
 
-    app.post('/sell', addToSellerEventsSelling);
+    const addToSellerWatchList = (req, res) => {
+        const eventID = req.body.eventID;
+        const seller = req.session['profile']._id.toString();
+        sellersDao.updateSellerEventsWatchlist(seller, eventID)
+            .then((status) => res.json(status))
+    };
+
+    app.post('/sell/tickets', addToSellerEventsSelling);
+    app.post('/sell/watchlist', addToSellerWatchList);
 }
