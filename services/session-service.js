@@ -42,6 +42,21 @@ module.exports = (app) => {
                 }})
     };
 
+    const editProfile = (req, res) => {
+        const id = req.body._id
+        const user = req.body
+        const userInfo = {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            zip: user.zip
+        }
+        usersDao.updateUserDetails(id,userInfo)
+            .then(() => usersDao.findUserById(id)
+                .then(newUser => {req.session['profile'] = newUser}))
+            .then(() => res.sendStatus(200))
+    }
+
     const register = (req, res) => {
         const newUser = req.body;
         usersDao.findUserByUsername(newUser.username)
@@ -89,7 +104,6 @@ module.exports = (app) => {
     };
 
     const profile = (req, res) => {
-        console.log(req.session['profile']);
         res.json(req.session['profile']);
     };
 
@@ -112,6 +126,7 @@ module.exports = (app) => {
     app.post('/api/login', login);
     app.post('/api/register', register);
     app.post('/api/profile', profile);
+    app.post('/api/edit-profile', editProfile);
     app.post('/api/logout', logout);
     app.get('/api/users/:username', userByUsername);
 }
