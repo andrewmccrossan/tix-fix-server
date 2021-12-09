@@ -98,8 +98,20 @@ module.exports = (app) => {
         res.sendStatus(200);
     };
 
+    const userByUsername = (req, res) => {
+        usersDao.findUserByUsername(req.params.username)
+            .then(user => {
+                if (user.length > 0) {
+                    res.json(user[0]);
+                } else {
+                    res.sendStatus(400);
+                }
+            })
+    };
+
     app.post('/api/login', login);
     app.post('/api/register', register);
     app.post('/api/profile', profile);
     app.post('/api/logout', logout);
+    app.get('/api/users/:username', userByUsername);
 }
