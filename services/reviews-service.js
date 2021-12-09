@@ -1,5 +1,6 @@
 const reviewersDao = require('../db/reviewers/reviewers-dao');
 const reviewsDao = require('../db/reviews/reviews-dao');
+const usersDao = require('../db/users/users-dao');
 
 const axios = require('axios');
 
@@ -38,5 +39,31 @@ module.exports = (app) => {
             })
     };
 
+    async function getReviewsFromReviewerID (req, res) {
+        let reviewInfos = [];
+        let something = await reviewersDao.findReviewsByReviewerID(req.params.userID);
+        await Promise.all(something.reviews.map(async (reviewID) => {
+            let review = await reviewsDao.findReviewById(reviewID);
+            if (review.revieweeType === 'SELLER') {
+                let user = await usersDao.findUserById(review.revieweeID);
+                const reviewObj = {
+                    revieweeName: '',
+                    score: '',
+                    text: '',
+                    revieweeType: '',
+                };
+                reviewObj.revieweeName = user.username;
+                reviewObj.score = review.score;
+                reviewObj.text = review.text;
+                reviewObj.revieweeType = review.revieweeType;
+                reviewInfos.push(reviewObj);
+            } else {
+                // TODO - handle venue reviews
+            }
+        }));
+        res.json(reviewInfos);
+    };
+
     app.post('/api/reviews/events/:eventID', postVenueReview);
+    app.get('/api/reviews/reviewers/:userID', getReviewsFromReviewerID)
 }
