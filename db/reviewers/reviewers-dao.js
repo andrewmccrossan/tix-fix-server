@@ -19,7 +19,10 @@ const updateReviewerReviews = (id, newReviewID) =>
 const updateReviewerToDoList = (id, newEventID) =>
     model.updateOne({_id: id}, {$push: {eventsToDoList: newEventID}});
 
+const findReviewsByReviewerID = (id) =>
+    model.findOne({_id: id}, {reviews: 1});
+
 module.exports = {
     findReviewerById, createReviewer, deleteReviewer, updateReviewer,
-    updateReviewerReviews, updateReviewerToDoList
+    updateReviewerReviews, updateReviewerToDoList, findReviewsByReviewerID
 };
