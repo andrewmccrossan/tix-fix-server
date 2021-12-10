@@ -1,6 +1,7 @@
 const sellersDao = require('../db/sellers/sellers-dao');
+const usersDao = require('../db/users/users-dao');
 
-module.exports = (app) => {
+module.exports = async (app) => {
 
     const addToSellerEventsSelling = (req, res) => {
         const newTickets = req.body;
@@ -16,14 +17,34 @@ module.exports = (app) => {
             .then((status) => res.json(status))
     };
 
-    const sellerInfo = (req, res) => {
+    const getSellerInfo = (req, res) => {
         const sellerID = req.session['profile']._id.toString();
-        console.log(sellerID);
         sellersDao.findSellerById(sellerID)
-            .then(info => {res.json(info); console.log(info)});
+            .then(info => res.json(info));
     };
+
+    async function getEventSellers(req, res) {
+        const eventID = req.params['eventId'];
+        let eventSellersInfo = [];
+        let eventSellers = await sellersDao.findSellersByEventID(eventID);
+        await Promise.all(eventSellers.map(async (eventSeller) => {
+            let seller = await usersDao.findUserById(eventSeller._id);
+            const sellerObj = {
+                sellerUsername: "",
+                ticketQuantity: "",
+                ticketPrice: ""
+            };
+            sellerObj.sellerUsername = seller.username;
+            let ticket = await sellersDao.findTicketInfoBySellerAndEventID(eventSeller._id, eventID);
+            sellerObj.ticketPrice = ticket[0].eventsSelling[0].price;
+            sellerObj.ticketQuantity = ticket[0].eventsSelling[0].qty;
+            eventSellersInfo.push(sellerObj);
+        }));
+        res.json(eventSellersInfo);
+    }
 
     app.post('/sell/tickets', addToSellerEventsSelling);
     app.post('/sell/watchlist', addToSellerWatchList);
-    app.get('/sell/seller', sellerInfo);
+    app.get('/sell/seller', getSellerInfo);
+    app.get('/sell/sellers/:eventId', getEventSellers)
 }

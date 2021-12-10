@@ -20,9 +20,7 @@ const updateSellerEventsWatchlist = (id, newEventID) =>
     model.updateOne({_id: id}, {$push: {eventsWatchlist: newEventID}});
 
 const findSellersByEventID = (eventID) =>
-    model.find({eventsSelling: {$elemMatch: {
-        eventID: eventID
-    }}}, {_id: 1});
+    model.find({eventsSelling: {$elemMatch: {eventID: eventID}}}, {_id: 1});
 
 const findTicketInfoBySellerAndEventID = (sellerID, eventID) =>
     model.find({_id: sellerID}, {eventsSelling: {$elemMatch: {eventID: eventID}}});
