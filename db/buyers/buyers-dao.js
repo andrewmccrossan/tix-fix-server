@@ -16,8 +16,10 @@ const updateBuyer = (id, updatedBuyer) =>
 const updateBuyerEventsBought = (id, newEventID) =>
     model.updateOne({_id: id}, {$push: {eventsBought: newEventID}});
 
+
 const updateBuyerEventsWishlist = (id, newEventID) =>
     model.updateOne({_id: id}, {$push: {eventsWishlist: newEventID}});
+
 
 module.exports = {
     findBuyerById, createBuyer, deleteBuyer, updateBuyer, updateBuyerEventsBought,
