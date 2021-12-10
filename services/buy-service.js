@@ -29,18 +29,24 @@ module.exports = (app) => {
             .then(info => res.json(info));
     };
 
+    const buyerInfoById = (req, res) => {
+
+        const buyerId = req.params['buyerID'];
+
+        buyersDao.findBuyerById(buyerId)
+            .then(info => res.json(info));
+    };
+
     const buyerEventTransaction = (req, res) => {
 
         const buyerId = req.session['profile']._id.toString();
         const eventId = req.params['eventId'].toString();
-
-        console.log(buyerId)
-
         transactionDao.findBuyerTransaction(buyerId, eventId).then(info => res.json(info));
     };
 
     app.post('/buy/tickets', addToBuyerEventsBought);
     app.get('/buy/buyer', buyerInfo);
+    app.get('/buy/:buyerID', buyerInfoById);
     app.get('/buy/details/:eventId', buyerEventTransaction);
     app.post('/buy/watchlist', addToBuyWishList);
 
