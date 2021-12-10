@@ -43,8 +43,15 @@ module.exports = async (app) => {
         res.json(eventSellersInfo);
     }
 
+    const getSellerInfoById = (req, res) => {
+        const sellerID = req.params['sellerID'];
+        sellersDao.findSellerById(sellerID)
+            .then(info => res.json(info));
+    };
+
     app.post('/sell/tickets', addToSellerEventsSelling);
     app.post('/sell/watchlist', addToSellerWatchList);
     app.get('/sell/seller', getSellerInfo);
     app.get('/sell/sellers/:eventId', getEventSellers)
+    app.get('/sell/:sellerID', getSellerInfoById);
 }
