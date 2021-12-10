@@ -85,19 +85,76 @@ module.exports = (app) => {
                 reviewObj.revieweeType = review.revieweeType;
                 reviewInfos.push(reviewObj);
             } else {
-                // TODO - handle venue reviews
+                let venueInfo = await axios.get(`https://api.seatgeek.com/2/venues/${review.revieweeID}?client_id=${SEATGEEK_CLIENT_ID}&client_secret=${SEATGEEK_CLIENT_SECRET}`);
+                const reviewObj = {
+                    revieweeName: '',
+                    score: '',
+                    text: '',
+                    revieweeType: '',
+                };
+                reviewObj.revieweeName = venueInfo.data.name;
+                reviewObj.score = review.score;
+                reviewObj.text = review.text;
+                reviewObj.revieweeType = review.revieweeType;
+                reviewInfos.push(reviewObj);
             }
         }));
         res.json(reviewInfos);
     };
 
     async function getReviewsFromSellerID (req, res) {
-        let reviews = await reviewsDao.findReviewsForSeller(req.params.sellerID);
+        let reviews = await reviewsDao.findReviewsForReviewee(req.params.sellerID);
         res.json(reviews);
+    };
+
+    async function getInformativeReviewsFromSellerID (req, res) {
+        let reviewInfos = [];
+        let reviews = await reviewsDao.findReviewsForReviewee(req.params.sellerID);
+        await Promise.all(reviews.map(async (review) => {
+            const reviewObj = {
+                reviewerName: '',
+                score: 1,
+                text: '',
+                revieweeType: '',
+                reviewerID: '',
+            };
+            let reviewer = await usersDao.findUserById(review.reviewerID);
+            reviewObj.reviewerName = reviewer.username;
+            reviewObj.score = review.score;
+            reviewObj.text = review.text;
+            reviewObj.revieweeType = review.revieweeType;
+            reviewObj.reviewerID = review.reviewerID;
+            reviewInfos.push(reviewObj);
+        }));
+        res.json(reviewInfos);
+    };
+
+    async function getReviewsFromVenueID (req, res) {
+        let reviewInfos = [];
+        let reviews = await reviewsDao.findReviewsForReviewee(req.params.venueID);
+        await Promise.all(reviews.map(async (review) => {
+            const reviewObj = {
+                reviewerName: '',
+                score: 1,
+                text: '',
+                revieweeType: '',
+                reviewerID: '',
+            };
+            let reviewer = await usersDao.findUserById(review.reviewerID);
+            reviewObj.reviewerName = reviewer.username;
+            reviewObj.score = review.score;
+            reviewObj.text = review.text;
+            reviewObj.revieweeType = review.revieweeType;
+            reviewObj.reviewerID = review.reviewerID;
+            reviewInfos.push(reviewObj);
+        }));
+        res.json(reviewInfos);
     };
 
     app.post('/api/reviews/sellers/:sellerID', postSellerReview);
     app.post('/api/reviews/events/:eventID', postVenueReview);
     app.get('/api/reviews/reviewers/:userID', getReviewsFromReviewerID);
     app.get('/api/reviews/sellers/:sellerID', getReviewsFromSellerID);
+    app.get('/api/reviews/informativesellers/:sellerID', getInformativeReviewsFromSellerID);
+    app.get('/api/reviews/venues/:venueID', getReviewsFromVenueID);
 }
