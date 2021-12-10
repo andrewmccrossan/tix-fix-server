@@ -1,6 +1,7 @@
 const reviewersDao = require('../db/reviewers/reviewers-dao');
 const reviewsDao = require('../db/reviews/reviews-dao');
 const usersDao = require('../db/users/users-dao');
+const sellersDao = require('../db/sellers/sellers-dao');
 
 const axios = require('axios');
 
@@ -39,6 +40,32 @@ module.exports = (app) => {
             })
     };
 
+    const postSellerReview = (req, res) => {
+        const score = req.body.score;
+        const text = req.body.text;
+        const date = req.body.date;
+        const sellerID = req.params.sellerID;
+        reviewsDao.createReview({
+            reviewerID: req.session['profile']._id.toString(),
+            revieweeType: 'SELLER',
+            revieweeID: sellerID,
+            text: text,
+            score: score,
+            date: date,
+        })
+            .then(review => {
+                if (review) {
+                    reviewersDao.updateReviewerReviews(req.session['profile']._id.toString(), review._id)
+                        .then(() => res.sendStatus(200))
+                } else {
+                    res.sendStatus(400);
+                }})
+            .catch(error => {
+                console.log(error);
+                res.sendStatus(400);
+            })
+    };
+
     async function getReviewsFromReviewerID (req, res) {
         let reviewInfos = [];
         let something = await reviewersDao.findReviewsByReviewerID(req.params.userID);
@@ -64,6 +91,13 @@ module.exports = (app) => {
         res.json(reviewInfos);
     };
 
+    async function getReviewsFromSellerID (req, res) {
+        let reviews = await reviewsDao.findReviewsForSeller(req.params.sellerID);
+        res.json(reviews);
+    };
+
+    app.post('/api/reviews/sellers/:sellerID', postSellerReview);
     app.post('/api/reviews/events/:eventID', postVenueReview);
-    app.get('/api/reviews/reviewers/:userID', getReviewsFromReviewerID)
+    app.get('/api/reviews/reviewers/:userID', getReviewsFromReviewerID);
+    app.get('/api/reviews/sellers/:sellerID', getReviewsFromSellerID);
 }

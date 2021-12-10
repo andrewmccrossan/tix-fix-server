@@ -13,6 +13,9 @@ const updateReview = (id, updatedReview) =>
     model.updateOne({_id: id},
                     {$set: updatedReview});
 
+const findReviewsForSeller = (sellerID) =>
+    model.find({revieweeID: sellerID});
+
 module.exports = {
-    findReviewById, createReview, deleteReview, updateReview
+    findReviewById, createReview, deleteReview, updateReview, findReviewsForSeller
 };
