@@ -13,6 +13,10 @@ const updateTransaction = (id, updatedTransaction) =>
     model.updateOne({_id: id},
                     {$set: updatedTransaction});
 
+const findBuyerTransaction = (buyerId, eventId) => {
+    return model.findOne({buyerID:buyerId, eventID: eventId})
+}
+
 module.exports = {
-    findTransactionById, createTransaction, deleteTransaction, updateTransaction
+    findTransactionById, createTransaction, deleteTransaction, updateTransaction, findBuyerTransaction
 };
