@@ -165,6 +165,13 @@ module.exports = (app) => {
             .then((info) => res.json(info))
     };
 
+    const removeToDoListEvent = (req, res) => {
+        const reviewerID = req.session['profile']._id.toString();
+        const eventID = req.params.eventID;
+        reviewersDao.deleteEventFromToDoList(reviewerID, eventID)
+            .then((info) => res.json(info))
+    };
+
     app.post('/api/reviews/sellers/:sellerID', postSellerReview);
     app.post('/api/reviews/events/:eventID', postVenueReview);
     app.get('/api/reviews/reviewers/:userID', getReviewsFromReviewerID);
@@ -172,5 +179,6 @@ module.exports = (app) => {
     app.get('/api/reviews/informativesellers/:sellerID', getInformativeReviewsFromSellerID);
     app.get('/api/reviews/venues/:venueID', getReviewsFromVenueID);
     app.post('/api/reviews/todolist', addToReviewToDoList);
-    app.get('/api/reviews/:reviewerID', getReviewerInfo)
+    app.get('/api/reviews/:reviewerID', getReviewerInfo);
+    app.delete('/api/reviews/todolist/:eventID', removeToDoListEvent);
 }
