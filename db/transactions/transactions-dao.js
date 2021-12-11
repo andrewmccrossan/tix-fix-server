@@ -17,6 +17,11 @@ const findBuyerTransaction = (buyerId, eventId) => {
     return model.findOne({buyerID:buyerId, eventID: eventId})
 }
 
+const findAllBuyerTransactions = (buyerId) => {
+    return model.find({buyerID:buyerId})
+}
+
+
 module.exports = {
-    findTransactionById, createTransaction, deleteTransaction, updateTransaction, findBuyerTransaction
+    findTransactionById, createTransaction, deleteTransaction, updateTransaction, findBuyerTransaction, findAllBuyerTransactions
 };
