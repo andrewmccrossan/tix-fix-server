@@ -159,6 +159,12 @@ module.exports = (app) => {
             .then((status) => res.json(status))
     };
 
+    const getReviewerInfo = (req, res) => {
+        const reviewerID = req.params.reviewerID;
+        reviewersDao.findReviewerById(reviewerID)
+            .then((info) => res.json(info))
+    };
+
     app.post('/api/reviews/sellers/:sellerID', postSellerReview);
     app.post('/api/reviews/events/:eventID', postVenueReview);
     app.get('/api/reviews/reviewers/:userID', getReviewsFromReviewerID);
@@ -166,4 +172,5 @@ module.exports = (app) => {
     app.get('/api/reviews/informativesellers/:sellerID', getInformativeReviewsFromSellerID);
     app.get('/api/reviews/venues/:venueID', getReviewsFromVenueID);
     app.post('/api/reviews/todolist', addToReviewToDoList);
+    app.get('/api/reviews/:reviewerID', getReviewerInfo)
 }
