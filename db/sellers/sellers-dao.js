@@ -31,6 +31,7 @@ const findReviewsForSeller = (sellerID) =>
 const deleteSellerEventFromWatchList = (id, eventID) =>
     model.updateOne({_id: id}, {$pull: {eventsWatchlist: eventID}});
 
+
 const deleteSellerEventFromSellingList = (id, ticketId) =>
     model.updateOne({_id: id}, {$pull: {eventsSelling: {_id: ticketId}}});
 
