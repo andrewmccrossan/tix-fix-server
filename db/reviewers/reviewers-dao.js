@@ -22,7 +22,10 @@ const updateReviewerToDoList = (id, newEventID) =>
 const findReviewsByReviewerID = (id) =>
     model.findOne({_id: id}, {reviews: 1});
 
+const deleteEventFromToDoList = (id, eventID) =>
+    model.updateOne({_id: id}, {$pull: {eventsToDoList: eventID}});
+
 module.exports = {
     findReviewerById, createReviewer, deleteReviewer, updateReviewer,
-    updateReviewerReviews, updateReviewerToDoList, findReviewsByReviewerID
+    updateReviewerReviews, updateReviewerToDoList, findReviewsByReviewerID, deleteEventFromToDoList
 };
