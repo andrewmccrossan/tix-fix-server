@@ -30,11 +30,13 @@ module.exports = async (app) => {
         await Promise.all(eventSellers.map(async (eventSeller) => {
             let seller = await usersDao.findUserById(eventSeller._id);
             const sellerObj = {
+                sellerID: "",
                 sellerUsername: "",
                 ticketQuantity: "",
                 ticketPrice: ""
             };
             sellerObj.sellerUsername = seller.username;
+            sellerObj.sellerID = eventSeller._id;
             let ticket = await sellersDao.findTicketInfoBySellerAndEventID(eventSeller._id, eventID);
             sellerObj.ticketPrice = ticket[0].eventsSelling[0].price;
             sellerObj.ticketQuantity = ticket[0].eventsSelling[0].qty;
