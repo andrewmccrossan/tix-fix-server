@@ -44,10 +44,18 @@ module.exports = (app) => {
         transactionDao.findBuyerTransaction(buyerId, eventId).then(info => res.json(info));
     };
 
+    const deleteBuyerEventFromWishList = (req, res) => {
+        const buyerId = req.session['profile']._id.toString();
+        const eventId = req.params['eventId'].toString();
+        buyersDao.deleteBuyerEventFromWishList(buyerId, eventId)
+            .then((status) => res.json(status))
+    }
+
     app.post('/buy/tickets', addToBuyerEventsBought);
     app.get('/buy/buyer', buyerInfo);
     app.get('/buy/:buyerID', buyerInfoById);
     app.get('/buy/details/:eventId', buyerEventTransaction);
     app.post('/buy/watchlist', addToBuyWishList);
+    app.post('/buy/wishlist/:eventId', deleteBuyerEventFromWishList)
 
 }
