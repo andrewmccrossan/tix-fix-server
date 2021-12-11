@@ -33,13 +33,15 @@ module.exports = async (app) => {
                 sellerID: "",
                 sellerUsername: "",
                 ticketQuantity: "",
-                ticketPrice: ""
+                ticketPrice: "",
+                ticketSetID: ""
             };
             sellerObj.sellerUsername = seller.username;
             sellerObj.sellerID = eventSeller._id;
             let ticket = await sellersDao.findTicketInfoBySellerAndEventID(eventSeller._id, eventID);
             sellerObj.ticketPrice = ticket[0].eventsSelling[0].price;
             sellerObj.ticketQuantity = ticket[0].eventsSelling[0].qty;
+            sellerObj.ticketSetID = ticket[0].eventsSelling[0]._id;
             eventSellersInfo.push(sellerObj);
         }));
         res.json(eventSellersInfo);
@@ -58,10 +60,20 @@ module.exports = async (app) => {
             .then((status) => res.json(status))
     }
 
+    const deleteEventFromSellingList = (req, res) => {
+        const eventSellerTicketInfo = req.body;
+        const sellerId = eventSellerTicketInfo.sellerID;
+        const ticketId = eventSellerTicketInfo.ticketSetID;
+        const eventId = req.params['eventID']; /*Dont need for eventSelling deleting*/
+        sellersDao.deleteSellerEventFromWatchList(sellerId, ticketId)
+            .then((status) => res.json(status))
+    }
+
     app.post('/sell/tickets', addToSellerEventsSelling);
     app.post('/sell/watchlist', addToSellerWatchList);
     app.get('/sell/seller', getSellerInfo);
     app.get('/sell/sellers/:eventId', getEventSellers)
     app.get('/sell/:sellerID', getSellerInfoById);
-    app.post('/sell/watchlist/:eventId', deleteSellerEventFromWatchList)
+    app.post('/sell/watchlist/delete/:eventId', deleteSellerEventFromWatchList);
+    app.post('/sell/ticketSold/:eventID', deleteEventFromSellingList)
 }
