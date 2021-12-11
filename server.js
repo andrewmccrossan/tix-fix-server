@@ -49,5 +49,6 @@ require('./services/session-service')(app);
 require('./services/sell-service')(app);
 require('./services/buy-service')(app);
 require('./services/reviews-service')(app);
+require('./services/transaction-service')(app);
 
 app.listen(process.env.PORT || 4000);
