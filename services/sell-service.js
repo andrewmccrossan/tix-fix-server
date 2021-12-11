@@ -62,6 +62,14 @@ module.exports = async (app) => {
             .then((status) => res.json(status))
     }
 
+    const deleteSellerEventFromSelling = (req, res) => {
+        const sellerId = req.session['profile']._id.toString();
+        const eventId = req.params['eventId'].toString();
+
+        sellersDao.deleteSellerEventFromSellingList(sellerId, eventId)
+            .then((status) => res.json(status))
+    }
+
     let sellTicket = async (req, res) => {
         const eventSellerTicketInfo = req.body;
         const sellerID = eventSellerTicketInfo.sellerID;
@@ -91,5 +99,6 @@ module.exports = async (app) => {
     app.get('/sell/sellers/:eventId', getEventSellers);
     app.get('/sell/:sellerID', getSellerInfoById);
     app.post('/sell/delete/watchlist/:eventId', deleteSellerEventFromWatchList);
+    app.post('/sell/delete/selling/:eventId', deleteSellerEventFromSelling);
     app.post('/sell/ticketSold/:eventID', sellTicket);
 }
