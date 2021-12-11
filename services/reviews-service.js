@@ -4,6 +4,7 @@ const usersDao = require('../db/users/users-dao');
 const sellersDao = require('../db/sellers/sellers-dao');
 
 const axios = require('axios');
+const buyersDao = require("../db/buyers/buyers-dao");
 
 const SEATGEEK_CLIENT_ID = process.env.SEATGEEK_CLIENT_ID || 'MjQ1OTcxNTl8MTYzNzcxOTI2MC4yNzYwMTM';
 const SEATGEEK_CLIENT_SECRET = process.env.SEATGEEK_CLIENT_SECRET || '3218bfa9ff53979b799a09b011e3cc1339194e7f03c8d8caefcd6cdf2177724c';
@@ -151,10 +152,25 @@ module.exports = (app) => {
         res.json(reviewInfos);
     };
 
+    const addToReviewToDoList = (req, res) => {
+        const eventID = req.body.eventID;
+        const reviewerID = req.session['profile']._id.toString();
+        reviewersDao.updateReviewerToDoList(reviewerID, eventID)
+            .then((status) => res.json(status))
+    };
+
+    const getReviewerInfo = (req, res) => {
+        const reviewerID = req.params.reviewerID;
+        reviewersDao.findReviewerById(reviewerID)
+            .then((info) => res.json(info))
+    };
+
     app.post('/api/reviews/sellers/:sellerID', postSellerReview);
     app.post('/api/reviews/events/:eventID', postVenueReview);
     app.get('/api/reviews/reviewers/:userID', getReviewsFromReviewerID);
     app.get('/api/reviews/sellers/:sellerID', getReviewsFromSellerID);
     app.get('/api/reviews/informativesellers/:sellerID', getInformativeReviewsFromSellerID);
     app.get('/api/reviews/venues/:venueID', getReviewsFromVenueID);
+    app.post('/api/reviews/todolist', addToReviewToDoList);
+    app.get('/api/reviews/:reviewerID', getReviewerInfo)
 }
