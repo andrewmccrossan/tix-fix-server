@@ -28,8 +28,12 @@ const findTicketInfoBySellerAndEventID = (sellerID, eventID) =>
 const findReviewsForSeller = (sellerID) =>
     model.find({_id: sellerID}, {reviews: 1});
 
+const deleteSellerEventFromWatchList = (id, eventID) =>
+    model.updateOne({_id: id}, {$pull: {eventsWatchlist: eventID}});
+
+
 module.exports = {
     findSellerById, createSeller, deleteSeller, updateSeller, findSellersByEventID,
     findTicketInfoBySellerAndEventID, updateSellerEventsSelling, updateSellerEventsWatchlist,
-    findReviewsForSeller
+    findReviewsForSeller, deleteSellerEventFromWatchList
 };
