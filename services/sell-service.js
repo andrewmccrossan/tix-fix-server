@@ -2,6 +2,7 @@ const sellersDao = require('../db/sellers/sellers-dao');
 const usersDao = require('../db/users/users-dao');
 const buyersDao = require('../db/buyers/buyers-dao');
 const transactionsDao = require('../db/transactions/transactions-dao');
+const eventsDao = require('../db/events/events-dao');
 
 module.exports = async (app) => {
 
@@ -88,7 +89,19 @@ module.exports = async (app) => {
             qty: qty,
                                                                         });
         let removeEventsSellingObject = await sellersDao.deleteSellerEventFromSellingList(sellerID, ticketID);
-        res.sendStatus(200);
+        let foundEvent = await eventsDao.findEventById(eventID);
+        if (foundEvent) {
+            let updateBuyers = await eventsDao.updateEventBuyers(eventID, buyerID);
+            let updateSellers = await eventsDao.updateEventSellers(eventID, sellerID);
+            res.sendStatus(200);
+        } else {
+            let addEventTransaction = await eventsDao.createEvent({
+                                                                      _id: eventID,
+                                                                      buyers: [buyerID],
+                                                                      sellers: [sellerID],
+                                                                  });
+            res.sendStatus(200);
+        }
     }
 
     app.post('/sell/tickets', addToSellerEventsSelling);
