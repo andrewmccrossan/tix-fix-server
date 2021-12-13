@@ -77,10 +77,8 @@ module.exports = async (app) => {
         const price = eventSellerTicketInfo.ticketPrice;
         const qty = eventSellerTicketInfo.ticketQuantity;
         const eventID = req.params.eventID;
-        console.log(req.params);
         const buyerID = req.session['profile'];
-        console.log(eventSellerTicketInfo);
-        console.log(eventID);
+
         let addTixToEventsBought = await buyersDao.updateBuyerEventsBought(buyerID, eventID);
         let addNewTransaction = await transactionsDao.createTransaction({
             buyerID: buyerID,

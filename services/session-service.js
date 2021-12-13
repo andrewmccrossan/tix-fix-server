@@ -104,7 +104,9 @@ module.exports = (app) => {
     };
 
     const profile = (req, res) => {
-        res.json(req.session['profile']);
+        if (req.session['profile']){
+            res.json(req.session['profile']);
+        }
     };
 
     const logout = (req, res) => {
