@@ -32,20 +32,22 @@ module.exports = async (app) => {
         let eventSellers = await sellersDao.findSellersByEventID(eventID);
         await Promise.all(eventSellers.map(async (eventSeller) => {
             let seller = await usersDao.findUserById(eventSeller._id);
-            const sellerObj = {
-                sellerID: "",
-                sellerUsername: "",
-                ticketQuantity: "",
-                ticketPrice: "",
-                ticketSetID: ""
-            };
-            sellerObj.sellerUsername = seller.username;
-            sellerObj.sellerID = eventSeller._id;
             let ticket = await sellersDao.findTicketInfoBySellerAndEventID(eventSeller._id, eventID);
-            sellerObj.ticketPrice = ticket[0].eventsSelling[0].price;
-            sellerObj.ticketQuantity = ticket[0].eventsSelling[0].qty;
-            sellerObj.ticketSetID = ticket[0].eventsSelling[0]._id;
-            eventSellersInfo.push(sellerObj);
+            ticket[0].eventsSelling.map((eventTicketGroup) => {
+                const sellerObj = {
+                    sellerID: "",
+                    sellerUsername: "",
+                    ticketQuantity: "",
+                    ticketPrice: "",
+                    ticketSetID: ""
+                };
+                sellerObj.sellerUsername = seller.username;
+                sellerObj.sellerID = eventSeller._id;
+                sellerObj.ticketPrice = eventTicketGroup.price;
+                sellerObj.ticketQuantity = eventTicketGroup.qty;
+                sellerObj.ticketSetID = eventTicketGroup._id;
+                eventSellersInfo.push(sellerObj);
+            })
         }));
         res.json(eventSellersInfo);
     }

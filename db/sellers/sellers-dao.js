@@ -23,7 +23,29 @@ const findSellersByEventID = (eventID) =>
     model.find({eventsSelling: {$elemMatch: {eventID: eventID}}}, {_id: 1});
 
 const findTicketInfoBySellerAndEventID = (sellerID, eventID) =>
-    model.find({_id: sellerID}, {eventsSelling: {$elemMatch: {eventID: eventID}}});
+    model.aggregate([
+                        {
+                            $match: {
+                                _id: sellerID
+                            }
+                        },
+                        {
+                            $set: {
+                                eventsSelling: {
+                                    $filter: {
+                                        input: "$eventsSelling",
+                                        as: "e",
+                                        cond: {
+                                            $eq: [
+                                                "$$e.eventID",
+                                                eventID
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]);
 
 const findReviewsForSeller = (sellerID) =>
     model.find({_id: sellerID}, {reviews: 1});
